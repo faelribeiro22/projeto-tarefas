@@ -33,20 +33,20 @@
           <div class="col-md-6">
               <table class="table">
         			<tr>
-        				<td>Descrição</td>
-        				<td>Data</td>
-                        <td>Ultima modificação</td>
-                        <td>Deletado em</td>
-                        <td></td>
-                        <td></td>
+        				<th>Descrição</th>
+        				<th>Data</th>
+                        <th>Ultima modificação</th>
+                        <th>Deletado em</th>
+                        <th></th>
+                        <th></th>
         			</tr>
         			<tr v-for="item in list">
-        				<td>{{item.descricao}}</td>
-        				<td>{{item.data}}</td>
-                        <td>{{item.dataUltimaAtualizacao}}<td>
-                        <td><span>{{item.dataDel}}</span><td>
-                        <td><button type="button" class="btn btn-success">Atualizar Tarefa</button></td>
-                        <td><button type="button" class="btn btn-danger">Deletar</button></td>
+        				<td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.descricao}}</span></td>
+        				<td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.data}}</span></td>
+                        <td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.dataUltimaAtualizacao}}</span><td>
+                        <td>{{item.dataDel}}<td>
+                        <td><button class="btn btn-success" @click="montaAtualizarTarefa(item.cod)" :disabled="item.desativado">Atualizar Tarefa</button></td>
+                        <td><button class="btn btn-danger" @click="removeTarefa(item.cod)" :disabled="item.desativado">Deletar</button></td>
         			</tr>
     		  </table>
           </div>
@@ -83,13 +83,41 @@ export default {
               data: this.data,
               dataUltimaAtualizacao: nova_d,
               dataDel: '',
-              ativo: true
+              desativado: false
           };
           localStorage.setItem(tarefa.cod, JSON.stringify(tarefa));
           this.list.push(tarefa);
+          this.descricao = '',
+          this.data = ''
       },
       removeTarefa(cod){
-          
+          var obj = JSON.parse(localStorage.getItem(cod));
+          var listAux = [];
+          var d = moment.tz('America/Sao_Paulo');
+          var nova_d = d.format('DD/MM/YYYY : HH:mm:ss');
+          obj.dataDel = nova_d;
+          obj.dataUltimaAtualizacao = nova_d;
+          localStorage.removeItem(cod);
+          obj.desativado = true;
+          for(var i=1;i<=localStorage.length;i++){
+              var aux = JSON.parse(localStorage.getItem(i));
+              listAux.push(aux);
+          }
+          listAux.push(obj);
+          localStorage.setItem(cod.toString(),JSON.stringify(obj));
+          this.list = listAux;
+      },
+      montaAtualizarTarefa(cod) {
+          var obj = JSON.parse(localStorage.getItem(cod));
+          var listAux = [];
+          this.descricao = obj.descricao,
+          this.data = obj.data
+          localStorage.removeItem(cod);
+          for(var i=1;i<=localStorage.length;i++){
+              var aux = JSON.parse(localStorage.getItem(i));
+              listAux.push(aux);
+          }
+          this.list = listAux;
       }
   }
 }
@@ -103,5 +131,11 @@ export default {
     }
     .btn-salvar{
         margin-left: 15%;
+    }
+    .tarefaDeletada {
+        text-decoration: line-through;
+    }
+    .dataDel{
+        text-decoration: none;
     }
 </style>
