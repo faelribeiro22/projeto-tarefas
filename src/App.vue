@@ -18,7 +18,7 @@
               <div class="col-md-6">
                   <label for="data" class="col-md-2">Data</label>
                   <div class="col-md-3">
-                      <input type="date" id="tarefa.data" class="form-control" v-model="data">
+                      <input type="text" id="tarefa.data" class="form-control" v-model="data">
                   </div>
             </div>
           </div>
@@ -37,21 +37,18 @@
         				<td>Data</td>
                         <td>Ultima modificação</td>
                         <td>Deletado em</td>
+                        <td></td>
+                        <td></td>
         			</tr>
         			<tr v-for="item in list">
         				<td>{{item.descricao}}</td>
         				<td>{{item.data}}</td>
                         <td>{{item.dataUltimaAtualizacao}}<td>
                         <td><span>{{item.dataDel}}</span><td>
+                        <td><button type="button" class="btn btn-success">Atualizar Tarefa</button></td>
+                        <td><button type="button" class="btn btn-danger">Deletar</button></td>
         			</tr>
     		  </table>
-              <ul>
-                  <li v-for="item in list">
-                      <span>{{item.descricao}}</span>
-                      <span>{{item.data}}</span>
-                      <span>{{item.dataUltimaAtualizacao}}</span>
-                  </li>
-              </ul>
           </div>
       </div>
   </div>
@@ -64,13 +61,22 @@ export default {
   data () {
     return {
         text: '',
-        list: []
+        list : []
     }
+  },
+  created: function() {
+      var lista = [];
+      for( var i = 1; i <= localStorage.length; i++){
+          var aux = localStorage.getItem(i);
+          lista.push(JSON.parse(aux));
+      }
+      this.list = lista;
   },
   methods: {
       addTarefa(){
           var d = moment.tz('America/Sao_Paulo');
           var nova_d = d.format('DD/MM/YYYY : HH:mm:ss');
+          var dataAux = moment(this.data,'DD/MM/YYYY').format('DD/MM/YYYY');
           var tarefa = {
               cod: localStorage.length + 1,
               descricao: this.descricao,
@@ -79,8 +85,11 @@ export default {
               dataDel: '',
               ativo: true
           };
-          localStorage["tarefas"] = JSON.stringify(tarefa);
+          localStorage.setItem(tarefa.cod, JSON.stringify(tarefa));
           this.list.push(tarefa);
+      },
+      removeTarefa(cod){
+          
       }
   }
 }
