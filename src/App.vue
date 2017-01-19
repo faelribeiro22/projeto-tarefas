@@ -1,54 +1,57 @@
 <template>
   <div id="app" class="container-fluid">
       {{tarefas}}
-      <div class="form-group">
+      <div class="d-flex flex-row">
           <div class="row">
               <div class="col-md-6">
                   <div class="title">
                       <h1>Cadastre uma nova tarefa</h1>
                   </div>
-                  <label for="descricao" class="col-md-2">Descrição</label>
-                  <div class="col-md-3">
+                  <label for="descricao" class="col-md-1">Descrição</label>
+                  <div class="col-md-4">
                       <input type="textarea" id="tarefa.descricao" class="form-control"placeholder="Digite a descrição da tarefa" v-model="descricao">
                   </div>
-              </div>
-          </div>
-          <br>
-          <div class="row">
-              <div class="col-md-6">
-                  <label for="data" class="col-md-2">Data</label>
+                  <label for="data" class="col-md-1">Data</label>
                   <div class="col-md-3">
-                      <input type="text" id="tarefa.data" class="form-control" v-model="data">
+                      <input type="text" id="tarefa.data" class="form-control" v-model="data" maxlength="10" placeholder="Digite a data padrão dia/mês/ano">
                   </div>
-            </div>
+                  <div class="col-md-3">
+                      <button type="button" class="btn btn-primary btn-salvar" v-on:click="addTarefa()">SALVAR</button>
+                  </div>
+              </div>
+                <div class="col-md-6 listaTarefas">
+                    <div class="col-md-6 tabela">
+                        <table class="table" v-show="this.list.length > 0">
+                            <caption class="tituloTarefa">Lista tarefas</caption>
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Data</th>
+                                    <th>Ultima modificação</th>
+                                    <th></th>
+                                    <th>Deletado em</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in list" v-bind:class="{ tarefaDeletada: item.desativado }">
+                                    <td v-bind:class="{ tarefaDeletada: item.desativado }">{{item.descricao}}</td>
+                                    <td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.data}}</span></td>
+                                    <td><span >{{item.dataUltimaAtualizacao}}</span><td>
+                                    <td>{{item.dataDel}}<td>
+                                    <td><button class="btn btn-success" @click="montaAtualizarTarefa(item.cod)" :disabled="item.desativado">Atualizar Tarefa</button></td>
+                                    <td><button class="btn btn-danger" @click="removeTarefa(item.cod)" :disabled="item.desativado">Deletar</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+              </div>
           </div>
           <br>
           <div class="row">
               <div class="col-md-6">
-                  <button type="button" class="btn btn-primary btn-salvar" v-on:click="addTarefa()">SALVAR</button>
+
               </div>
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-md-6">
-              <table class="table">
-        			<tr>
-        				<th>Descrição</th>
-        				<th>Data</th>
-                        <th>Ultima modificação</th>
-                        <th>Deletado em</th>
-                        <th></th>
-                        <th></th>
-        			</tr>
-        			<tr v-for="item in list">
-        				<td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.descricao}}</span></td>
-        				<td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.data}}</span></td>
-                        <td><span v-bind:class="{ tarefaDeletada: item.desativado }">{{item.dataUltimaAtualizacao}}</span><td>
-                        <td>{{item.dataDel}}<td>
-                        <td><button class="btn btn-success" @click="montaAtualizarTarefa(item.cod)" :disabled="item.desativado">Atualizar Tarefa</button></td>
-                        <td><button class="btn btn-danger" @click="removeTarefa(item.cod)" :disabled="item.desativado">Deletar</button></td>
-        			</tr>
-    		  </table>
           </div>
       </div>
   </div>
@@ -138,4 +141,14 @@ export default {
     .dataDel{
         text-decoration: none;
     }
+    .tabela{
+        margin-top: 0px;
+    }
+    .listaTarefas{
+        margin-top: 25px;
+    }
+    .tituloTarefa{
+        text-align: center;
+    }
+
 </style>
