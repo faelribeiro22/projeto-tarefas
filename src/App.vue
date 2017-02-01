@@ -9,11 +9,11 @@
                   </div>
                   <label for="descricao" class="col-md-1">Descrição</label>
                   <div class="col-md-4">
-                      <input type="textarea" id="tarefa.descricao" class="form-control"placeholder="Digite a descrição da tarefa" v-model="descricao">
+                      <textarea id="tarefa.descricao" class="form-control"placeholder="Digite a descrição da tarefa" row="3" v-model="descricao">
                   </div>
                   <label for="data" class="col-md-1">Data</label>
                   <div class="col-md-3">
-                      <input type="text" id="tarefa.data" class="form-control" v-model="data" maxlength="10" placeholder="Digite a data padrão dia/mês/ano">
+                      <input type="text" id="tarefa.data" class="form-control" v-model="data" maxlength="10" placeholder="dia/mês/ano">
                   </div>
                   <div class="col-md-3">
                       <button type="button" class="btn btn-primary btn-salvar" v-on:click="addTarefa()">SALVAR</button>
@@ -141,6 +141,9 @@ export default {
 </script>
 
 <style scoped>
+    textarea {
+        resize: none;
+    }
     h1{
         font-size: 25px;
         margin-left: auto;
