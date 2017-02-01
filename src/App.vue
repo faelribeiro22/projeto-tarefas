@@ -3,12 +3,13 @@
       {{tarefas}}
       <div class="d-flex flex-row">
           <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6" id="adiciona">
                   <div class="title">
                       <h1>Cadastre uma nova tarefa</h1>
                   </div>
                   <label for="descricao" class="col-md-1">Descrição</label>
                   <div class="col-md-4">
+                      <input type="hidden" id="tarefa.cod" v-model="cod" value="">
                       <input type="textarea" id="tarefa.descricao" class="form-control"placeholder="Digite a descrição da tarefa" v-model="descricao">
                   </div>
                   <label for="data" class="col-md-1">Data</label>
@@ -63,7 +64,7 @@ export default {
   },
   created: function() {
       var lista = [];
-      for( var i = 1; i <= localStorage.length; i++){
+      for( var i = 1;lista.length < localStorage.length; i++){
           var aux = localStorage.getItem(i);
           if(aux != null)
             lista.push(JSON.parse(aux));
@@ -75,6 +76,10 @@ export default {
           var d = moment.tz('America/Sao_Paulo');
           var nova_d = d.format('DD/MM/YYYY : HH:mm:ss');
           var dataAux = moment(this.data,'DD/MM/YYYY').format('DD/MM/YYYY');
+          var cod = localStorage.length + 1;
+          if(this.cod ==! ''){
+              cod = this.cod;
+          }
           var tarefa = {
               cod: localStorage.length + 1,
               descricao: this.descricao,
@@ -86,37 +91,28 @@ export default {
           localStorage.setItem(tarefa.cod, JSON.stringify(tarefa));
           this.list.push(tarefa);
           this.descricao = '',
-          this.data = ''
+          this.data = '',
+          this.cod = ''
       },
       removeTarefa(cod){
           var obj = JSON.parse(localStorage.getItem(cod));
+          var aux = obj;
           var listAux = [];
           var d = moment.tz('America/Sao_Paulo');
           var nova_d = d.format('DD/MM/YYYY : HH:mm:ss');
           obj.dataDel = nova_d;
           obj.dataUltimaAtualizacao = nova_d;
-          localStorage.removeItem(cod);
           obj.desativado = true;
-          for(var i=1;i<=localStorage.length;i++){
-              var aux = JSON.parse(localStorage.getItem(i));
-              if(aux != null)
-                listAux.push(aux);
-          }
-          listAux.push(obj);
           localStorage.setItem(cod.toString(),JSON.stringify(obj));
-          this.list = listAux;
+          var pos = this.list.indexOf(aux);
+          this.list.splice(pos,1,obj);
       },
       montaAtualizarTarefa(cod) {
           var obj = JSON.parse(localStorage.getItem(cod));
           var listAux = [];
           this.descricao = obj.descricao,
-          this.data = obj.data
-          localStorage.removeItem(cod);
-          for(var i=1;i<=localStorage.length;i++){
-              var aux = JSON.parse(localStorage.getItem(i));
-              listAux.push(aux);
-          }
-          this.list = listAux;
+          this.data = obj.data;
+          this.cod = obj.cod;
       }
   }
 }
