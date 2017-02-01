@@ -65,7 +65,8 @@ export default {
       var lista = [];
       for( var i = 1; i <= localStorage.length; i++){
           var aux = localStorage.getItem(i);
-          lista.push(JSON.parse(aux));
+          if(aux != null)
+            lista.push(JSON.parse(aux));
       }
       this.list = lista;
   },
@@ -98,7 +99,8 @@ export default {
           obj.desativado = true;
           for(var i=1;i<=localStorage.length;i++){
               var aux = JSON.parse(localStorage.getItem(i));
-              listAux.push(aux);
+              if(aux != null)
+                listAux.push(aux);
           }
           listAux.push(obj);
           localStorage.setItem(cod.toString(),JSON.stringify(obj));
