@@ -9,7 +9,7 @@
                   </div>
                   <label for="descricao" class="col-md-1">Descrição</label>
                   <div class="col-md-4">
-                      <textarea id="tarefa.descricao" class="form-control"placeholder="Digite a descrição da tarefa" row="3" v-model="descricao">
+                      <textarea id="descricao" class="form-control"placeholder="Digite a descrição da tarefa" row="3" v-model="descricao">
                   </div>
                   <label for="data" class="col-md-1">Data</label>
                   <div class="col-md-3">
@@ -63,12 +63,14 @@ export default {
   },
   created: function() {
       var lista = [];
-      for( var i = 1;lista.length < localStorage.length; i++){
-          var aux = localStorage.getItem(i);
-          if(aux != null)
-            lista.push(JSON.parse(aux));
+      if(localStorage.length != 0){
+        for( var i = 1;lista.length < localStorage.length; i++){
+            var aux = localStorage.getItem(i);
+            if(aux != null)
+              lista.push(JSON.parse(aux));
+        }
+        this.list = lista;
       }
-      this.list = lista;
   },
   methods: {
       addTarefa(){
